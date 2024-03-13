@@ -10,7 +10,6 @@ use Hash;
 
 class AdminController extends Controller
 {
-    //
     public function dashboard()
     {
         return view('admin.dashboard');
@@ -22,103 +21,281 @@ class AdminController extends Controller
         return view('admin.agents', compact('users'));
     }
 
-     public function AddAgent()
-     {
-     return view("admin.add-agent");
-     }
+    public function manageSuperAgent()
+    {
+        $superagents = User::with('roles')->whereIn("role", [2])->get();
+        return view('admin.manage-super-agent', compact('superagents'));
+    }
 
-      //Add agent data
-      public function PostAddAgent(Request $request)
-      {
-          $request->validate([
-              'first_name' => 'required',
-              'tele_id' => 'required|unique:users,telegram_id', // Ensure tele_id is unique in the users table
-              'password' => 'required|min:8',
-              'role' => 'required',
-              'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
-          ]);
-      
-          $user = new User();
-          $user->role = $request->role;
-          $user->name = $request->first_name;
-          $user->email = $request->email;
-          $user->password = Hash::make($request->password);
-          $user->telegram_id = $request->tele_id;
-          $user->group_tele_id = $request->group_tele_id;
-          $user->per_win_loss = $request->per_win_loss;
-          $res = $user->save();
-      
-          if ($res) {
-              // Redirect to "AgentUsers" route if agent is successfully added
-              return redirect()->route("AgentUsers")->with("success", "Super Agent has been added successfully.");
-          } else {
-              return redirect()->route("AgentUsers")->with("error", "Failed to add Super Agent.");
-          }
-      }
-      
+    public function addSuperAgent()
+    {
+        return view("admin.add-super-agent");
+    }
 
-  
-    public function editviewAgent($id)
-     {
-         $users = User::find($id);
-         return view("admin.edit-agent", compact("users"));
-     }
-
-     //update  agent  data
-     public function UpdateAgent(Request $request, $id)
-     {
+    public function postSuperAgent(Request $request)
+    {
         $request->validate([
             'first_name' => 'required',
-            'tele_id' => 'required|unique:users,telegram_id,'. $id, // Ensure tele_id is unique in the users table
+            'tele_id' => 'required|unique:users,telegram_id',
+            'password' => 'required|min:8',
+            'email' => 'required|email|unique:users,email',
+            'win_commission' => 'required',
+            'loss_commission' => 'required',
+        ]);
+
+        $user = new User();
+        $user->sub_agent_id = $request->sub_agent_id;
+        $user->role = 2;
+        $user->name = $request->first_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->telegram_id = $request->tele_id;
+        $user->group_tele_id = $request->group_tele_id;
+        $user->win_commission = $request->win_commission;
+        $user->loss_commission = $request->loss_commission;
+
+        $res = $user->save();
+
+        if ($res) {
+            return redirect()->route("manageSuperAgent")->with("success", "Super Agent has been added successfully.");
+        } else {
+            return redirect()->route("manageSuperAgent")->with("error", "Failed to add Super Agent.");
+        }
+    }
+
+    public function editSuperAgent($id)
+    {
+        $users = User::find($id);
+        return view("admin.edit-super-agent", compact("users"));
+    }
+
+    public function updateSuperAgent(Request $request, $id)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'tele_id' => 'required|unique:users,telegram_id,' . $id, // Ensure tele_id is unique in the
             //'password' => 'required|min:8',
-            'role' => 'required',
-            'email' => 'required|email|unique:users,email,' . $id, 
+            'email' => 'required|email|unique:users,email,' . $id,
+            'win_commission' => 'required',
+            'loss_commission' => 'required',
+
 
         ]);
 
-         $userfind = User::find($id);
+        $userfind = User::find($id);
 
-         if (empty($userfind)) {
-             return back()->with("failed", "Data not found");
-         } else {
+        if (empty($userfind)) {
+            return back()->with("failed", "Data not found");
+        } else {
 
-             if($request->password) {
-                 $pass = Hash::make($request->password);
-                
-             } else {
+            if ($request->password) {
+                $pass = Hash::make($request->password);
+            } else {
                 $pass = $userfind->password;
-              
-             }
-            
-             $userfind->name = $request->first_name;
-             $userfind->email = $request->email;
-             $userfind->telegram_id = $request->tele_id;
-             $userfind->group_tele_id = $request->group_tele_id;
-             $userfind->per_win_loss = $request->per_win_loss;
-             $userfind->password = $pass;
-             $userfind->role = $request->role;
-             $userfind->save();
+            }
 
-             return redirect()
-                 ->route("AgentUsers")
-                 ->with("success", "Agent has been updated successfully.");
-         }
-     }
+            $userfind->name = $request->first_name;
+            $userfind->email = $request->email;
+            $userfind->telegram_id = $request->tele_id;
+            $userfind->group_tele_id = $request->group_tele_id;
+            $userfind->win_commission = $request->win_commission;
+            $userfind->loss_commission = $request->loss_commission;
+            $userfind->password = $pass;
+            $userfind->role = 2;
+            $userfind->save();
 
-     // Delete agent
-     public function DeleteAgent($id){
-         $agent_id = $id;
-         // // dd($user_id);
-         $deleteUser = User::find($agent_id);
-         $res = $deleteUser->delete();
-         if ($res == true) {
-         return back()->with("success", "Agent has been deleted successfully.");
-         }else {
-         return back()->with("failed", "Data not deleted.");
-         }
-     }
+            return redirect()
+                ->route("manageSuperAgent")
+                ->with("success", "Agent has been updated successfully.");
+        }
+    }
 
-      // View Agent
+    // Delete agent
+    public function deleteSuperAgent($id)
+    {
+        $agent_id = $id;
+        // // dd($user_id);
+        $deleteUser = User::find($agent_id);
+        $res = $deleteUser->delete();
+        if ($res == true) {
+            return back()->with("success", "Agent has been deleted successfully.");
+        } else {
+            return back()->with("failed", "Data not deleted.");
+        }
+    }
+
+    // View Agent
+    public function ViewSuperAgent($id)
+    {
+        $agent = User::find($id);
+        return view("admin.view-super-agent", compact("agent"));
+    }
+
+
+
+
+
+
+    public function addMasterAgent()
+    {
+        $superagents = User::with('roles')->whereIn("role", [2])->get();
+        return view("admin.add-master-agent", compact('superagents'));
+    }
+
+    public function postMasterAgent(Request $request)
+    {
+        $request->validate([
+            'sub_agent_id' => 'required',
+            'first_name' => 'required',
+            'tele_id' => 'required|unique:users,telegram_id',
+            'password' => 'required|min:8',
+            'email' => 'required|email|unique:users,email',
+            'win_commission' => 'required',
+            'loss_commission' => 'required',
+        ]);
+
+        $user = new User();
+        $user->sub_agent_id = $request->sub_agent_id;
+        $user->role = 3;
+        $user->name = $request->first_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->telegram_id = $request->tele_id;
+        $user->group_tele_id = $request->group_tele_id;
+        $user->win_commission = $request->win_commission;
+        $user->loss_commission = $request->loss_commission;
+
+        $res = $user->save();
+
+        if ($res) {
+            return redirect()->route("manageMasterAgent")->with("success", "Master Agent has been added successfully.");
+        } else {
+            return redirect()->route("manageMasterAgent")->with("error", "Failed to add Master Agent.");
+        }
+    }
+
+    public function manageMasterAgent($agentId = null)
+    {
+        // Assuming role is a field in the users table
+        $query = User::with('roles')->where("role", 3);
+
+        if ($agentId) {
+            $query->where('sub_agent_id', $agentId);
+        }
+        $masteragents = $query->get();
+
+        return view('admin.manage-master-agent', compact('masteragents'));
+    }
+
+
+
+
+
+
+
+    public function manageAgent()
+    {
+        $agents = User::with('roles')->whereIn("role", [4])->get();
+        return view('admin.manage-agents', compact('agents'));
+    }
+
+    public function AddAgent()
+    {
+        return view("admin.add-agent");
+    }
+
+    //Add agent data
+    public function PostAddAgent(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'tele_id' => 'required|unique:users,telegram_id', // Ensure tele_id is unique in the users table
+            'password' => 'required|min:8',
+            'role' => 'required',
+            'email' => 'required|email|unique:users,email', // Ensure email is unique in the users table
+        ]);
+
+        $user = new User();
+        $user->role = $request->role;
+        $user->name = $request->first_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->telegram_id = $request->tele_id;
+        $user->group_tele_id = $request->group_tele_id;
+        $user->per_win_loss = $request->per_win_loss;
+        $res = $user->save();
+
+        if ($res) {
+            // Redirect to "AgentUsers" route if agent is successfully added
+            return redirect()->route("AgentUsers")->with("success", "Super Agent has been added successfully.");
+        } else {
+            return redirect()->route("AgentUsers")->with("error", "Failed to add Super Agent.");
+        }
+    }
+
+
+    public function editviewAgent($id)
+    {
+        $users = User::find($id);
+        return view("admin.edit-agent", compact("users"));
+    }
+
+    //update  agent  data
+    public function UpdateAgent(Request $request, $id)
+    {
+        $request->validate([
+            'first_name' => 'required',
+            'tele_id' => 'required|unique:users,telegram_id,' . $id, // Ensure tele_id is unique in the users table
+            //'password' => 'required|min:8',
+            'role' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+
+        ]);
+
+        $userfind = User::find($id);
+
+        if (empty($userfind)) {
+            return back()->with("failed", "Data not found");
+        } else {
+
+            if ($request->password) {
+                $pass = Hash::make($request->password);
+            } else {
+                $pass = $userfind->password;
+            }
+
+            $userfind->name = $request->first_name;
+            $userfind->email = $request->email;
+            $userfind->telegram_id = $request->tele_id;
+            $userfind->group_tele_id = $request->group_tele_id;
+            $userfind->per_win_loss = $request->per_win_loss;
+            $userfind->password = $pass;
+            $userfind->role = $request->role;
+            $userfind->save();
+
+            return redirect()
+                ->route("AgentUsers")
+                ->with("success", "Agent has been updated successfully.");
+        }
+    }
+
+
+
+    // Delete agent
+    public function DeleteAgent($id)
+    {
+        $agent_id = $id;
+        // // dd($user_id);
+        $deleteUser = User::find($agent_id);
+        $res = $deleteUser->delete();
+        if ($res == true) {
+            return back()->with("success", "Agent has been deleted successfully.");
+        } else {
+            return back()->with("failed", "Data not deleted.");
+        }
+    }
+
+    // View Agent
     public function ViewAgent($id)
     {
         $agent = User::find($id);
@@ -131,24 +308,24 @@ class AdminController extends Controller
     {
         $players = Player::get();
         $agents = User::with('roles')->whereIn("role", [2, 3, 4])->get();
-        return view('admin.manage-players', compact('players','agents'));
+        return view('admin.manage-players', compact('players', 'agents'));
     }
-     
-    //Show add  player form 
+
+    //Show add  player form
     public function addPlayers()
     {
-       $agents = User::with('roles')->whereIn("role", [2, 3, 4])->get();
-       return view("admin.add-players",compact('agents'));
+        $agents = User::with('roles')->whereIn("role", [2, 3, 4])->get();
+        return view("admin.add-players", compact('agents'));
     }
-     
+
     // Add player data
-     public function postaddPlayer(Request $request)
+    public function postaddPlayer(Request $request)
     {
         $request->validate([
             'password' => "required|min:8",
             'username' => 'required|unique:players,username' // Ensure tele_id is unique in the users table
-       
-            ]);
+
+        ]);
 
         $user = new Player();
         $user->username       = $request->username;
@@ -173,15 +350,15 @@ class AdminController extends Controller
     {
         $player = Player::find($id);
         $agents = User::with('roles')->whereIn("role", [2, 3, 4])->get();
-        return view("admin.edit-player", compact("player",'agents'));
+        return view("admin.edit-player", compact("player", 'agents'));
     }
 
     //update  player  data
     public function UpdatePlayer(Request $request, $id)
     {
         $request->validate([
-            'username' => 'required|unique:players,username,' . $id, 
-            ]);
+            'username' => 'required|unique:players,username,' . $id,
+        ]);
 
         $playerfind = Player::find($id);
 
@@ -194,34 +371,35 @@ class AdminController extends Controller
                 $pass = $playerfind->password;
             }
 
-        $playerfind->username       = $request->username;
-        $playerfind->password       = Hash::make($request->password);
-        $playerfind->url            = $request->url;
-        $playerfind->ip             = $request->ip;
-        $playerfind->credits        = $request->credits;
-        $playerfind->max_win        = $request->max_win;
-        $playerfind->max_bet        = $request->max_bet;
-        $playerfind->agent_id       = $request->agent;
-        $playerfind->account_status = $request->account_status;
-        $playerfind->save();
+            $playerfind->username       = $request->username;
+            $playerfind->password       = Hash::make($request->password);
+            $playerfind->url            = $request->url;
+            $playerfind->ip             = $request->ip;
+            $playerfind->credits        = $request->credits;
+            $playerfind->max_win        = $request->max_win;
+            $playerfind->max_bet        = $request->max_bet;
+            $playerfind->agent_id       = $request->agent;
+            $playerfind->account_status = $request->account_status;
+            $playerfind->save();
 
-        return redirect()
-            ->route("managePlayers")
-            ->with("success", "Players has been updated successfully.");
+            return redirect()
+                ->route("managePlayers")
+                ->with("success", "Players has been updated successfully.");
         }
     }
 
 
     // Delete Player
-    public function DeletePlayer($id){
+    public function DeletePlayer($id)
+    {
         $player_id = $id;
         // // dd($user_id);
         $deletePlayer = Player::find($player_id);
         $res = $deletePlayer->delete();
         if ($res == true) {
-        return back()->with("success", "Players has been deleted successfully.");
-        }else {
-        return back()->with("failed", "Data not deleted.");
+            return back()->with("success", "Players has been deleted successfully.");
+        } else {
+            return back()->with("failed", "Data not deleted.");
         }
     }
 
@@ -231,23 +409,21 @@ class AdminController extends Controller
     {
         $player = Player::find($id);
         $agents = User::with('roles')->whereIn("role", [2, 3, 4])->get();
-        return view("admin.view-player", compact("player",'agents'));
+        return view("admin.view-player", compact("player", 'agents'));
     }
 
-     public function manageRole()
-     {
-         $users = User::where('role','!=',1)->get();
-         $roles = Role::all();
-         return view('admin.manage-role', compact(['users','roles']));
-     }
+    public function manageRole()
+    {
+        $users = User::where('role', '!=', 1)->get();
+        $roles = Role::all();
+        return view('admin.manage-role', compact(['users', 'roles']));
+    }
 
-     public function updateRole(Request $request)
-     {
-         User::where('id', $request->user_id)->update([
-             'role' => $request->role_id
-         ]);
-         return redirect()->back();
-     }
-
-
+    public function updateRole(Request $request)
+    {
+        User::where('id', $request->user_id)->update([
+            'role' => $request->role_id
+        ]);
+        return redirect()->back();
+    }
 }

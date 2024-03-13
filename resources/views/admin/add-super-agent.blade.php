@@ -1,7 +1,19 @@
 @extends('layout/layouts')
 
 @section('form_js')
-    <script></script>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function(e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // toggle the eye icon
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    </script>
 @endsection
 
 @section('space-work')
@@ -10,13 +22,13 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Add Agent</h1>
+                    <h1>Add Super Agent</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item"><a href="{{ route('Dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('AgentUsers') }}">Agent list</a></li>
-                        <li class="breadcrumb-item active">Add Agent</li>
+                        <li class="breadcrumb-item"><a href="{{ route('manageSuperAgent') }}">Agent list</a></li>
+                        <li class="breadcrumb-item active">Add Super Agent</li>
                     </ol>
                 </div>
             </div>
@@ -33,24 +45,11 @@
         </div> --}}
                 <!-- /.card-header -->
                 <div class="card-body">
-                    <form id="addAgentForm" action="{{ route('postaddsuperagent') }}" method="POST">
+                    <form id="addSuperAgentForm" action="{{ route('postSuperAgent') }}" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Select Agent Role<span class="text-danger">*</span></label>
-                                    <select class="form-control select2" style="width: 100%;" name="role">
-                                        <option value="">Select role</option>
-                                        <option value="2">Super Agent</option>
-                                        <option value="3">Master Agent</option>
-                                        <option value="4">Agent</option>
-                                    </select>
-                                    @if ($errors->has('role'))
-                                        <span class="text-danger">{{ $errors->first('role') }}</span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="col-md-6">
+
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>First Name/Alias<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="first_name"
@@ -76,13 +75,21 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Password <span class="text-danger">*</span></label>
-                                    <input type="password" class="form-control" id="password" placeholder="Password"
-                                        name="password">
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="password" placeholder="Password"
+                                            name="password">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                     @if ($errors->has('password'))
                                         <span class="text-danger">{{ $errors->first('password') }}</span>
                                     @endif
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
@@ -108,11 +115,19 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Percentage of wins and losses </label>
-                                    <input type="number" class="form-control" id="per_win_loss"
-                                        placeholder="Percentage of wins and losses" name="per_win_loss">
+                                    <label>Commission on Wins(%)</label>
+                                    <input type="text" class="form-control" id="win_commission"
+                                        placeholder="Commission on Wins(%)" name="win_commission">
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Commission on Losses(%)</label>
+                                    <input type="text" class="form-control" id="loss_commission"
+                                        placeholder="Commission on Wins(%)" name="loss_commission">
+                                </div>
+                            </div>
+
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
