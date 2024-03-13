@@ -61,7 +61,11 @@
 .text-info {
     color: #007bff !important;
 }
-  </style>
+.nav-link {
+    display: block;
+    padding: 0.5rem 0rem;
+}
+</style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -134,22 +138,25 @@
               </p>
               </a>
               <ul class="nav nav-treeview">
-              <li class="nav-item">
-                  <a href="{{ route('AgentUsers') }}" class="nav-link {{ request()->routeIs('AgentUsers', 'addagent', 'editagent','viewagent') ? 'active' : '' }}">
-                  <i class="nav-icon fa fa-user text-info"></i>
-                  <p>Agents</p>
-                  </a>
-              </li>
-              <li class="nav-item">
-                  <a href="{{ route('managePlayers') }}" class="nav-link {{ request()->routeIs('managePlayers','addPlayers','editplayer','viewplayer') ? 'active' : '' }}">
-                  <i class="nav-icon fa fa-user text-info"></i>
-                  <p>Players</p>
-                  </a>
-              </li>
-              
-              
-              
+                <li class="nav-item">
+                    <a href="{{ route('AgentUsers') }}" class="nav-link {{ request()->routeIs('AgentUsers', 'addagent', 'editagent','viewagent') ? 'active' : '' }}">
+                    <i class="nav-icon fa fa-user text-info"></i>
+                    <p>Agents</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('managePlayers') }}" class="nav-link {{ request()->routeIs('managePlayers','addPlayers','editplayer','viewplayer') ? 'active' : '' }}">
+                    <i class="nav-icon fa fa-user text-info"></i>
+                    <p>Players</p>
+                    </a>
+                </li>
               </ul>
+          </li>
+          <li class="nav-item">
+              <a href="{{ route('transactionlist') }}" class="nav-link {{ request()->routeIs('transactionlist','addtransaction','editplayer','viewplayer') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-table text-info"></i>
+              <p>Transaction Management</p>
+              </a>
           </li>
            
             {{-- <li class="nav-item">
@@ -333,7 +340,8 @@
 <!-- <script src="{{ asset('backend/js/demo.js') }}"></script> -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backend/js/pages/dashboard.js') }}"></script>
-
+<!-- InputMask -->
+<script src="{{ asset('backend/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
 
 
 <!-- DataTables  & Plugins -->
@@ -367,6 +375,23 @@
       "buttons": ["csv", "excel", "pdf", "print"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
+
+  //Datemask dd/mm/yyyy
+  $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+  //Datemask2 mm/dd/yyyy
+  $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+  //Money Euro
+  $('[data-mask]').inputmask()
+
+  //Timepicker
+  $('#timepicker').datetimepicker({
+      format: 'LT'
+    })
+
+  //Timepicker
+  $('#timepicker2').datetimepicker({
+      format: 'LT'
+    })
   </script>
 </body>
 </html>

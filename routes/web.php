@@ -8,6 +8,7 @@ use App\Http\Controllers\SuperAgentController;
 use App\Http\Controllers\MasterAgentController;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Hash;
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,11 @@ Route::group(['prefix' => 'admin','middleware'=>['web','isAdmin']],function(){
     Route::post('/edit-player/{id}',[AdminController::class,'UpdatePlayer'])->name('posteditplayer');
     Route::get('/delete-player/{id}',[AdminController::class,'DeletePlayer'])->name('deleteplayer');
     Route::get('/view-player/{id}',[AdminController::class,'ViewPlayer'])->name('viewplayer');
+
+    Route::get('/transaction-list',[TransactionController::class,'transactoin'])->name('transactionlist');
+    Route::get('/add-transaction',[TransactionController::class,'Addtransactoin'])->name('addtransaction');
+    Route::post('/post-add-transaction',[TransactionController::class,'PostAddtransactoin'])->name('postaddtransaction');
+    Route::get('/view-transaction/{id}',[TransactionController::class,'Viewtransactoin'])->name('viewtransaction');
 
 });
 
