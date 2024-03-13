@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Player extends Model
+class Period extends Model
 {
     use HasFactory;
-    protected $table = 'players';
+    protected $table = 'period';
 
     // Define the inverse relationship with the Transaction model
-    public function playerlist()
+    public function periodtype()
     {
         return $this->hasMany(Transaction::class);
     }

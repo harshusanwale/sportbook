@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Player extends Model
+class Bet_type extends Model
 {
     use HasFactory;
-    protected $table = 'players';
-
+    protected $table = 'bet_type';
     // Define the inverse relationship with the Transaction model
-    public function playerlist()
+    public function bettype()
     {
         return $this->hasMany(Transaction::class);
     }

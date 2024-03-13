@@ -44,4 +44,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(Role::class,'id', 'role');
     }
+
+
+    // Define the inverse relationship with the Transaction model
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
 }
