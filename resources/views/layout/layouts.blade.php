@@ -40,6 +40,11 @@
 
 
     <style>
+        .nav-link {
+            display: block;
+            padding: 0.5rem 0rem;
+        }
+
         /* [class*=sidebar-dark-] {
     background-color: #5e6d7ccc!important;
 }
@@ -207,6 +212,14 @@
                                     <p>Player Management</p>
                                 </a>
                             </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('transactionlist') }}"
+                                    class="nav-link {{ request()->routeIs('transactionlist', 'addtransaction', 'viewtransaction') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-table text-info"></i>
+                                    <p>Transaction Management</p>
+                                </a>
+                            </li>
                         @endif
 
                     </ul>
@@ -315,6 +328,27 @@
                 "buttons": ["csv", "excel", "pdf", "print"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
+
+        //Datemask dd/mm/yyyy
+        $('#datemask').inputmask('dd/mm/yyyy', {
+            'placeholder': 'dd/mm/yyyy'
+        })
+        //Datemask2 mm/dd/yyyy
+        $('#datemask2').inputmask('mm/dd/yyyy', {
+            'placeholder': 'mm/dd/yyyy'
+        })
+        //Money Euro
+        $('[data-mask]').inputmask()
+
+        //Timepicker
+        $('#timepicker').datetimepicker({
+            format: 'LT'
+        })
+
+        //Timepicker
+        $('#timepicker2').datetimepicker({
+            format: 'LT'
+        })
     </script>
 </body>
 
