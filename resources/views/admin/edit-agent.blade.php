@@ -10,7 +10,7 @@
     </div>
     <div class="col-sm-6">
     <ol class="breadcrumb float-sm-right">
-        <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Dashboard</a></li> 
+        <li class="breadcrumb-item"><a href="{{route('Dashboard')}}">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="{{route('AgentUsers')}}">Agent list</a></li>
         <li class="breadcrumb-item active">Edit Agent</li>
     </ol>
@@ -50,9 +50,7 @@
                     <option value="4" @if($users->role == '4') selected @endif>Agent</option>
                     </select>
                     @if($errors->has('role'))
-    
                     <span class="text-danger">{{ $errors->first('role')}}</span>
-    
                     @endif
                 </div>
                </div>
@@ -62,14 +60,14 @@
                     <label>First Name/Alias<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="first_name" placeholder="First Name/Alias" name="first_name" value="{{$users->name}}">
                     @if($errors->has('first_name'))
-    
+
                     <span class="text-danger">{{ $errors->first('first_name')}}</span>
-    
+
                     @endif
                 </div>
                 </div>
 
-           
+
             <!-- /.col -->
         </div>
         <!-- /.row -->
@@ -104,9 +102,9 @@
                     <label>Telegram ID<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="tele_id" placeholder="Telegram ID*" name="tele_id" value="{{$users->telegram_id}}">
                     @if($errors->has('tele_id'))
-    
+
                     <span class="text-danger">{{ $errors->first('tele_id')}}</span>
-    
+
                     @endif
                 </div>
                 </div>
@@ -116,8 +114,8 @@
                     <input type="text" class="form-control" id="group_tele_id" placeholder="Group Telegram ID" name="group_tele_id" value="{{$users->group_tele_id}}">
                 </div>
                </div>
-    
-            
+
+
         </div>
 
         <div class="row">
@@ -127,7 +125,7 @@
                 <input type="number" class="form-control" id="per_win_loss" placeholder="%" name="per_win_loss" value="{{$users->per_win_loss}}">
             </div>
            </div>
-            
+
         </div>
         <!-- /.row -->
         <!-- /.card-body -->
