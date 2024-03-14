@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Multi-Auth App</title>
-
+    <!-- <title>Multi-Auth App</title> -->
+    <title>Admin|Dashboard</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -215,8 +215,8 @@
 
                             <li class="nav-item">
                                 <a href="{{ route('transactionlist') }}"
-                                    class="nav-link {{ request()->routeIs('transactionlist', 'addtransaction', 'viewtransaction') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-table text-info"></i>
+                                    class="nav-link {{ request()->routeIs('transactionlist', 'addtransaction', 'viewtransaction','edittransaction') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-table"></i>
                                     <p>Transaction Management</p>
                                 </a>
                             </li>
@@ -292,8 +292,6 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="{{ asset('backend/js/pages/dashboard.js') }}"></script>
 
-
-
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('backend/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -307,6 +305,8 @@
     <script src="{{ asset('backend/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('backend/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('backend/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <!-- InputMask -->
+    <script src="{{ asset('backend/plugins/inputmask/jquery.inputmask.min.js') }}"></script>
 
     @yield('other_js')
     @yield('form_js')
@@ -329,26 +329,22 @@
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
 
-        //Datemask dd/mm/yyyy
-        $('#datemask').inputmask('dd/mm/yyyy', {
-            'placeholder': 'dd/mm/yyyy'
-        })
-        //Datemask2 mm/dd/yyyy
-        $('#datemask2').inputmask('mm/dd/yyyy', {
-            'placeholder': 'mm/dd/yyyy'
-        })
-        //Money Euro
-        $('[data-mask]').inputmask()
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
 
-        //Timepicker
-        $('#timepicker').datetimepicker({
-            format: 'LT'
-        })
+    //Timepicker
+    $('#timepicker').datetimepicker({
+        format: 'LT'
+      })
 
-        //Timepicker
-        $('#timepicker2').datetimepicker({
-            format: 'LT'
-        })
+    //Timepicker
+    $('#timepicker2').datetimepicker({
+        format: 'LT'
+      })
     </script>
 </body>
 

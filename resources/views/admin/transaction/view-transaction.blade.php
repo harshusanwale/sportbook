@@ -47,7 +47,7 @@
             <div class="col-md-6">
             <div class="form-group">
                 <label>Player name</label>
-                <input type="text" class="form-control" id="player_name" placeholder="Player name" name="player_name" value="{{ $transdata->player_name }}" readonly>
+                <input type="text" class="form-control" id="player_name" placeholder="Player name" name="player_name" value="{{ $transdata->player->username }}" readonly>
                 @if($errors->has('player_name'))
 
                 <span class="text-danger">{{ $errors->first('player_name')}}</span>

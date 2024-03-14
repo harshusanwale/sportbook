@@ -16,11 +16,12 @@ class Transaction extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Define the relationship with the Agent model
-    // Define the relationship with the Period model
+    /**
+     * Get the player record associated with the transaction.
+     */
     public function player()
     {
-        return $this->belongsTo(Player::class);
+        return $this->belongsTo(Player::class, 'player_name', 'id');
     }
     
 

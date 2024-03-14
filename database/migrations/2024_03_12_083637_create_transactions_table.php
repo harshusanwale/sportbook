@@ -16,7 +16,7 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->string('website_url');
-            $table->string('player_name');
+            $table->unsignedBigInteger('player_name');
             $table->unsignedBigInteger('agent_id');
             $table->date('bet_date');
             $table->time('bet_time');
@@ -43,6 +43,7 @@ class CreateTransactionsTable extends Migration
             $table->timestamps();
 
             $table->foreign('agent_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('player_name')->references('id')->on('players')->onDelete('cascade');
             $table->foreign('period_id')->references('id')->on('period')->onDelete('cascade');
             $table->foreign('bet_type_id')->references('id')->on('bet_type')->onDelete('cascade');
         });

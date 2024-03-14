@@ -77,12 +77,16 @@
             @foreach($tranlist as $list)
                 <tr>
                     <td>{{ $i }}</td>                    
-                    <td>{{$list->player_name}}</td>
+                    <td>{{$list->player->username}}</td>
                     <td>{{ $list->agent->name }}</td>
                     <td>{{ $list->trans_number }}</td>
                     <td>{{ '$'.$list->gross_profit }}</td>
                     <td>{{ '$'.$list->net_profit }}</td>
-                    <td><button class="btn btn-dark p-2"><a href="{{ route('viewtransaction', [$list->id]) }}" class="text-white" style="color: #FFFFFF;"><i class="fa fa-eye"></i></a></button></td>
+                    <td>
+                        <button class="btn btn-dark p-2" ><a href="{{route('edittransaction',[$list->id])}}" class="text-white" style=" color: #FFFFFF;"><i class="fa fa-edit" ></i></button></a>
+                        <button class="btn  btn-dark p-2" ><a href="{{route('deletetransaction',[$list->id])}}" data-id="" class="text-white delete-agent" style=" color: #FFFFFF;"  ><i class="fa fa-trash"></i></button></a>
+                        <button class="btn btn-dark p-2"><a href="{{ route('viewtransaction', [$list->id]) }}" class="text-white" style="color: #FFFFFF;"><i class="fa fa-eye"></i></a></button>
+                    </td>
                 </tr>
                 @php $i++; @endphp <!-- Increment $i inside the loop -->
                 @endforeach

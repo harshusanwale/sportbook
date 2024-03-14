@@ -10,9 +10,8 @@ class Player extends Model
     use HasFactory;
     protected $table = 'players';
 
-    // Define the inverse relationship with the Transaction model
-    public function playerlist()
+    public function transaction()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasOne(Transaction::class);
     }
 }
